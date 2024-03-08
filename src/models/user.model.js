@@ -1,9 +1,8 @@
-import mongoose from "mongoose";
+import mongoose ,{ Schema } from "mongoose";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-
-const userSchema = new mongoose.Schema(
-    {
+const userSchema = new Schema(
+    { 
         username: {
             type: String,
             required: true,
@@ -34,13 +33,13 @@ const userSchema = new mongoose.Schema(
         },
         watchHistory: [
             {
-                type: Schema.Types.objectId,
+                type: mongoose.Schema.Types.objectId,
                 ref: "Video",
             }
         ],
         password: {
             type: String,
-            required: [true, "password is required"]
+            required: [true,  "password is required"]
         },
         refreshToken: {
             type: String,
@@ -54,7 +53,7 @@ const userSchema = new mongoose.Schema(
 userSchema.pre("save", async function (next) {
     if (!this.isModified("password")) return next();
     //if it is not modified then return else go and encrypt it so thats how it is done 
-    this.password = bcrypt.hash(this.password, 10)
+    this.password =await  bcrypt.hash(this.password, 10)
     next();
 })
 
